@@ -1,0 +1,20 @@
+User->Browser:
+
+note left of Browser
+    user creates new note
+    and clicks on "Save"
+end note
+
+Browser->Server: HTTP POST http://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note left of Server
+    Server receives user request
+    to write note to database
+end note
+
+note right of Browser
+    Server writes note to database;
+    Browser stays on same page
+end note
+
+Server->Browser: status code "201 Created"
