@@ -8,7 +8,7 @@ const App = () => {
 		<div>
 			<p>Hello world, it is {now.toString()}</p>
 			<p>
-				{a} plus {b} is {a + b}
+				{a} minus {b} is {a - b}
 			</p>
 		</div>
 	)
