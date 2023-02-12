@@ -1,11 +1,25 @@
 import { useState } from 'react'
 
-const Display = ({ counter }) => <div>{counter}</div>
+const History = ({ allClicks }) => {
+  if (allClicks.length === 0) {
+    return (
+      <div>
+        The app is used by pressing the buttons
+      </div>
+    )
+  }
+  return (
+    <div>
+      Button press history: {allClicks.join(' ')}
+    </div>
+  )
+}
 
-
-const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
-
-
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
 
 const Test = () => {
   const [left, setLeft] = useState(0)
@@ -25,10 +39,10 @@ const Test = () => {
   return (
     <div>
       {left}
-      <button onClick={handleLeftClick}>left</button>
-      <button onClick={handleRightClick}>right</button>
+      <Button handleClick={handleLeftClick} text='left' />
+      <Button handleClick={handleRightClick} text='right' />
       {right}
-      <p>{allClicks.join(' ')}</p>
+      <History allClicks={allClicks} />
     </div>
   )
 }
