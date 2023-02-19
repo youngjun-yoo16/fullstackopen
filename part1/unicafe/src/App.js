@@ -1,15 +1,20 @@
 import { useState } from 'react'
 
-const Button = (props) => (
-	<button onClick={props.setFeedback}>
-		{props.text}
+const Button = ({setFeedback, text}) => (
+	<button onClick={setFeedback}>
+		{text}
 	</button>
 )
 
-const StatisticLine = (props) => (
-	<div>
-		<p>{props.text} {props.value}</p>
-	</div>
+const StatisticLine = ({text, value}) => (
+	<table>
+		<tbody>
+			<tr>
+				<td>{text}</td>
+				<td>{value}</td>
+			</tr>
+		</tbody>	
+	</table>
 )
 
 const Statistics = (props) => {
@@ -39,26 +44,19 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
   
-  const handleGood = () => {
-	  setGood(good +1)
-  }
-  
-  const handleNeutral = () => {
-	  setNeutral(neutral + 1)
-  }
-  
-  const handleBad = () => {
-	  setBad(bad + 1)
-  }
-  
+  const handleGood = () => setGood(good +1)
+  const handleNeutral = () => setNeutral(neutral + 1)
+  const handleBad = () => setBad(bad + 1)
   const all = good + neutral + bad
   const totalScore = good * 1 + bad * -1
+  
   const average = () => {
 	  if (all === 0) {
 		  return 0
 	  }
 	  return totalScore / all
   }
+  
   const positive = () => {
 	  if (all === 0) {
 		  return 0
