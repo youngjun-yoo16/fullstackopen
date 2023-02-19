@@ -1,20 +1,21 @@
 import { useState } from 'react'
 
-const Button = ({setFeedback, text}) => (
+const Button = ({ setFeedback, text }) => (
 	<button onClick={setFeedback}>
 		{text}
 	</button>
 )
 
-const StatisticLine = ({text, value}) => (
-	<table>
-		<tbody>
-			<tr>
-				<td>{text}</td>
-				<td>{value}</td>
-			</tr>
-		</tbody>	
-	</table>
+const StatisticLine = ({ text, value }) => (
+	
+	// It is wrong to declare <table></table> tags here because 
+	// everytime when StatisticLine Component gets called, it gets rerendered,
+	// causing table tags to rerender which destroys the table layout.
+	
+	<tr>
+		<td>{text}</td>
+		<td>{value}</td>
+	</tr>
 )
 
 const Statistics = (props) => {
@@ -26,14 +27,26 @@ const Statistics = (props) => {
 		) 
 	}
 	return (
-		<div>
-			<StatisticLine text="good" value={props.good} />
-			<StatisticLine text="neutral" value={props.neutral} />
-			<StatisticLine text="bad" value={props.bad} />
-			<StatisticLine text="all" value={props.all} />
-			<StatisticLine text="average" value={props.average} />
-			<StatisticLine text="positive" value={props.positive} />
-		</div>		
+		
+	// The content of every table is enclosed by <table></table>
+	// We need to use thead/tbody when we use table element in react.js
+	// I thought we only needed to create table layout in the StatisticLine
+	// component that props are passed thorough. However, this wasn't true.
+	// We first need to initialize <table> element in the Statistics Component
+	// that forms the basis of its structure.
+	// And then we pass through its data by props into the StatisticLine Component
+	// which further organize it with its <tr> and <td> tags.
+		
+		<table>
+			<tbody>
+				<StatisticLine text="good" value={props.good} />
+				<StatisticLine text="neutral" value={props.neutral} />
+				<StatisticLine text="bad" value={props.bad} />
+				<StatisticLine text="all" value={props.all} />
+				<StatisticLine text="average" value={props.average} />
+				<StatisticLine text="positive" value={props.positive} />
+			</tbody>
+		</table>		
 	)
 	
 }
