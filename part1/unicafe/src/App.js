@@ -7,7 +7,6 @@ const Button = ({ setFeedback, text }) => (
 )
 
 const StatisticLine = ({ text, value }) => (
-	
 	// It is wrong to declare <table></table> tags here because 
 	// everytime when StatisticLine Component gets called, it gets rerendered,
 	// causing table tags to rerender which destroys the table layout.
@@ -18,8 +17,8 @@ const StatisticLine = ({ text, value }) => (
 	</tr>
 )
 
-const Statistics = (props) => {
-	if (props.all === 0) {
+const Statistics = ({ good, neutral, bad, all, average, positive }) => {
+	if (all === 0) {
 		return (
 			<div>
 				No feedback given
@@ -27,7 +26,6 @@ const Statistics = (props) => {
 		) 
 	}
 	return (
-		
 	// The content of every table is enclosed by <table></table>
 	// We need to use thead/tbody when we use table element in react.js
 	// I thought we only needed to create table layout in the StatisticLine
@@ -39,12 +37,12 @@ const Statistics = (props) => {
 		
 		<table>
 			<tbody>
-				<StatisticLine text="good" value={props.good} />
-				<StatisticLine text="neutral" value={props.neutral} />
-				<StatisticLine text="bad" value={props.bad} />
-				<StatisticLine text="all" value={props.all} />
-				<StatisticLine text="average" value={props.average} />
-				<StatisticLine text="positive" value={props.positive} />
+				<StatisticLine text="good" value={good} />
+				<StatisticLine text="neutral" value={neutral} />
+				<StatisticLine text="bad" value={bad} />
+				<StatisticLine text="all" value={all} />
+				<StatisticLine text="average" value={average} />
+				<StatisticLine text="positive" value={positive} />
 			</tbody>
 		</table>		
 	)
