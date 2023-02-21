@@ -1,5 +1,13 @@
 import { useState } from 'react'
 
+const Button = ({ setRandomInt, text }) => (
+	<div>
+		<button onClick={setRandomInt}>
+			{text}
+		</button>
+	</div>
+)
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -13,10 +21,17 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-
+  
+  const getRandomInt = () => {
+	//Getting a random integer between two values, inclusive
+	//The maximum is inclusive and the minimum is inclusive
+	setSelected(Math.floor(Math.random() * (7 - 0 + 1) + 0))   
+  }
+  
   return (
     <div>
-      {anecdotes[selected]}
+      <h2>{anecdotes[selected]}</h2>
+	  <Button setRandomInt={getRandomInt} text="next anecdote" />
     </div>
   )
 }
