@@ -1,11 +1,9 @@
 import { useState } from 'react'
 
 const Button = ({ setRandomInt, text }) => (
-	<div>
-		<button onClick={setRandomInt}>
-			{text}
-		</button>
-	</div>
+	<button onClick={setRandomInt}>
+		{text}
+	</button>
 )
 
 const App = () => {
@@ -31,6 +29,7 @@ const App = () => {
   return (
     <div>
       <h2>{anecdotes[selected]}</h2>
+	  <Button setRandomInt={getRandomInt} text="vote" />
 	  <Button setRandomInt={getRandomInt} text="next anecdote" />
     </div>
   )
