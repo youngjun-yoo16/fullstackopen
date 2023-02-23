@@ -18,6 +18,8 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
    
+  const votes = Array(8).fill(0)
+  const [points, setPoints] = useState(votes)
   const [selected, setSelected] = useState(0)
   
   const getRandomInt = () => {
@@ -26,10 +28,17 @@ const App = () => {
 	setSelected(Math.floor(Math.random() * (7 - 0 + 1) + 0))   
   }
   
+  const updateVote = () => {
+	const copy = [...points]
+	copy[selected] += 1
+	setPoints(copy)
+  }
+
   return (
     <div>
       <h2>{anecdotes[selected]}</h2>
-	  <Button setRandomInt={getRandomInt} text="vote" />
+	  <p>has {points[selected]} votes</p>	  
+	  <Button setRandomInt={updateVote} text="vote" />
 	  <Button setRandomInt={getRandomInt} text="next anecdote" />
     </div>
   )
