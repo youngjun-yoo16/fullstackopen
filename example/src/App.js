@@ -6,8 +6,9 @@ const App = (props) => {
   const [newNote, setNewNote] = useState(
 	/* The placeholder text stored as the initial value of the newNote state appears
   	in the input element. */
-    'a new note...' 
-  ) 
+    '' 
+  )
+  const [showAll, setShowAll] = useState(true)
   
   const addNote = (event) => {
     event.preventDefault()
@@ -30,7 +31,7 @@ const App = (props) => {
   	setNewNote('')
   }
   
-  /* The event handler is called every time a change occurs in the input element. 
+  /* The event handler is called "every time a change occurs" in the input element. 
   The event handler function receives the event object as its event parameter.
   
   The target property of the event object now corresponds to the controlled 
@@ -42,11 +43,22 @@ const App = (props) => {
     setNewNote(event.target.value)
   }
   
+  /* If the value of showAll is false, the notesToShow variable will be assigned
+  to a list that only contains notes that have the important property set to true. */
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important)
+	
   return (
     <div>
       <h1>Notes</h1>
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all' }
+        </button>
+      </div>
       <ul>
-		{notes.map(note => 
+		{notesToShow.map(note => 
 		  <Note key={note.id} note={note} />
 		)}
       </ul>
