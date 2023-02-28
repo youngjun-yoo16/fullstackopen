@@ -9,11 +9,21 @@ const App = () => {
   const [newName, setNewName] = useState('')
   
   const checkDuplicateName = () => {
-	   const result = persons.find(({ name }) => name === newName)
-	   console.log(result)
-	   const message = result === undefined
-	     && `${newName} is already added to phonebook`
-	   window.alert(message)
+	   let find = false
+	   
+	   /* The find() method returns the first element in the provided array 
+	   that satisfies the provided testing function. If no values satisfy the 
+	   testing function, undefined is returned. */
+	   const result = persons.find(({ name }) => name.localeCompare(newName) === 0)
+	   
+	   /* result not equal to undefined means that there is a name that already
+	   exists in the phonebook. */
+	   if (result !== undefined) {
+		   find = true
+		   window.alert(`${newName} is already added to phonebook`)
+	   }
+	  
+	   return find
   }
   
   const addName = (event) => {
@@ -21,8 +31,11 @@ const App = () => {
 	  const nameObject = {
 		  name: newName
 	  }
-	  checkDuplicateName()
-	  setPersons(persons.concat(nameObject))
+	  const result = checkDuplicateName()
+	  
+	  /* Add name to the existing phonebook only when the checkDuplicateName function
+	  returns false */
+	  if (!result) setPersons(persons.concat(nameObject))
 	  setNewName('')
   }
   
