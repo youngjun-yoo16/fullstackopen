@@ -57,17 +57,19 @@ const App = () => {
   const handleNumberChange = (event) => setNewNumber(event.target.value)
 
 
-  const handleFilterChange = (event) => {
-	setNewFilter(event.target.value)
-	const filteredInfo = persons.filter(({ name }) => name.toLowerCase().match(newFilter.toLowerCase().trim()))
-	setFiltered(filteredInfo)
+  const handleFilterChange = (event) => setNewFilter(event.target.value)
+
+  
+  const filteredInfo = () => {
+	persons.filter(({ name }) => name.toLowerCase().match(newFilter.toLowerCase().trim()))  
+	setFiltered(filteredInfo)  
   }
   
   return (
     <div>
       <h2>Phonebook</h2>
 	  <div>
-		  filter shown with <input value={newFilter} onChange={handleFilterChange}/>	
+		  filter shown with <input value={newFilter} onChange={handleFilterChange}/>
       </div>
       <h2>add a new</h2>		  
       <form onSubmit={addInfo}>
