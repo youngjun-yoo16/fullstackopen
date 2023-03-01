@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const Display = ({ person }) => <li>{person.name} {person.number}</li>
-
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -53,18 +52,22 @@ const App = () => {
   
   const handleNameChange = (event) => setNewName(event.target.value)
 
-  
   const handleNumberChange = (event) => setNewNumber(event.target.value)
 
-
-  const handleFilterChange = (event) => setNewFilter(event.target.value)
-
-  
-  const filteredInfo = () => {
-	persons.filter(({ name }) => name.toLowerCase().match(newFilter.toLowerCase().trim()))  
-	setFiltered(filteredInfo)  
+  const handleFilterChange = (event) => {
+	console.log(event.target.value)
+	setNewFilter(event.target.value)
   }
   
+  useEffect(() => {
+	if (newFilter.length > 0) {
+		const filteredInfo = persons.filter(({ name }) => name.toLowerCase().match(newFilter.toLowerCase().trim()))
+		setFiltered(filteredInfo) 
+	} else {
+		setFiltered(persons) 
+	}
+  }, [newFilter])
+
   return (
     <div>
       <h2>Phonebook</h2>
