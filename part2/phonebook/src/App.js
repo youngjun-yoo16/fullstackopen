@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 const Display = ({ person }) => <li>{person.name} {person.number}</li>
 
-const Filter= ({ text, setFilter, onFilterChange }) => (
+const Filter = ({ text, setFilter, onFilterChange }) => (
 	<div>
 		{text} <input value={setFilter} onChange={onFilterChange}/>
 	</div>
@@ -75,7 +75,6 @@ const App = () => {
 	  /* Add name to the existing phonebook only when the checkDuplicateName function
 	  returns false */
 	  if (!result) setPersons(persons.concat(nameObject))
-	  
 	  setNewName('')
 	  setNewNumber('')
   }
