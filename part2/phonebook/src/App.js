@@ -2,6 +2,36 @@ import { useState, useEffect } from 'react'
 
 const Display = ({ person }) => <li>{person.name} {person.number}</li>
 
+const Filter= ({ text, setFilter, onFilterChange }) => (
+	<div>
+		{text} <input value={setFilter} onChange={onFilterChange}/>
+	</div>
+)
+
+const PersonForm = ({ addInfoToPhonebook, nameField, setName, onNameChange, numberField, setNumber, onNumberChange, buttonType, buttonText }) => (
+	<form onSubmit={addInfoToPhonebook}>
+		<div>
+			{nameField}: <input value={setName} onChange={onNameChange}/>
+		</div>
+		<div>
+			{numberField}: <input value={setNumber} onChange={onNumberChange}/>	
+		</div>
+		<div>
+		  <button type={buttonType}>
+			  {buttonText}
+		  </button> 	
+		</div>		
+	</form>
+)
+
+const Persons = ({ filtered }) => (
+	<ul style={{ listStyle: 'none', padding: 0 }}>
+		{filtered.map(person => 
+			<Display key={person.name} person={person} />
+		)}
+	</ul>	
+)
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -54,44 +84,38 @@ const App = () => {
 
   const handleNumberChange = (event) => setNewNumber(event.target.value)
 
-  const handleFilterChange = (event) => {
-	console.log(event.target.value)
-	setNewFilter(event.target.value)
-  }
+  const handleFilterChange = (event) => setNewFilter(event.target.value)
   
+  /* By using this Hook, you tell React that your component needs to do something after render. 
+  React will remember the function you passed (we’ll refer to it as our “effect”), 
+  and call it later after performing the DOM updates.
+  useEffect runs both after the first render and after every update. */
   useEffect(() => {
 	if (newFilter.length > 0) {
+		
+		/* The filter() method creates a shallow copy of a portion of a given array, 
+		filtered down to just the elements from the given array that pass the test 
+		implemented by the provided function. 
+		
+		The match() method retrieves the result of matching a string against a regular expression. */
 		const filteredInfo = persons.filter(({ name }) => name.toLowerCase().match(newFilter.toLowerCase().trim()))
 		setFiltered(filteredInfo) 
 	} else {
 		setFiltered(persons) 
 	}
-  }, [newFilter])
+  }, [newFilter, persons])
 
   return (
     <div>
       <h2>Phonebook</h2>
-	  <div>
-		  filter shown with <input value={newFilter} onChange={handleFilterChange}/>
-      </div>
-      <h2>add a new</h2>		  
-      <form onSubmit={addInfo}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-		<div>
-		  number: <input value={newNumber} onChange={handleNumberChange}/>	
-		</div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-		  {filtered.map(person => 
-			<Display key={person.name} person={person} />
-		  )}
-	  </ul>
+	  <Filter text="filter shown with" setFilter={newFilter} onFilterChange={handleFilterChange}/>
+      <h3>add a new</h3>
+	  <PersonForm addInfoToPhonebook={addInfo} nameField="name" setName={newName} onNameChange={handleNameChange} 
+		  numberField="number" setNumber={newNumber} onNumberChange={handleNumberChange} buttonType="submit" 
+		  buttonText="add"
+	  />
+      <h3>Numbers</h3>
+	  <Persons filtered={filtered} />	
     </div>
   )
 }
