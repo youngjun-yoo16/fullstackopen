@@ -1,36 +1,7 @@
 import { useState, useEffect } from 'react'
-
-const Display = ({ person }) => <li>{person.name} {person.number}</li>
-
-const Filter = ({ text, setFilter, onFilterChange }) => (
-	<div>
-		{text} <input value={setFilter} onChange={onFilterChange}/>
-	</div>
-)
-
-const PersonForm = ({ addInfoToPhonebook, nameField, setName, onNameChange, numberField, setNumber, onNumberChange, buttonType, buttonText }) => (
-	<form onSubmit={addInfoToPhonebook}>
-		<div>
-			{nameField}: <input value={setName} onChange={onNameChange}/>
-		</div>
-		<div>
-			{numberField}: <input value={setNumber} onChange={onNumberChange}/>	
-		</div>
-		<div>
-		  <button type={buttonType}>
-			  {buttonText}
-		  </button> 	
-		</div>		
-	</form>
-)
-
-const Persons = ({ filtered }) => (
-	<ul style={{ listStyle: 'none', padding: 0 }}>
-		{filtered.map(person => 
-			<Display key={person.name} person={person} />
-		)}
-	</ul>	
-)
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
