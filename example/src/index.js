@@ -1,9 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import axios from 'axios'
 import App from './App'
 
-const notes = [
+/* const notes = [
   {
     id: 1,
     content: 'HTML is easy',
@@ -19,18 +18,6 @@ const notes = [
     content: 'GET and POST are the most important methods of HTTP protocol',
     important: true
   }
-]
+] */
 
-axios
-	.get('https://json-sever-dev.run.goorm.site/notes')
-	.then(response => {
-	  const notes = response.data
-	  console.log(notes)
-})
-
-const promise2 = axios.get('https://json-sever-dev.run.goorm.site/foobar')
-console.log(promise2)
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <App notes={notes} />
-)
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
