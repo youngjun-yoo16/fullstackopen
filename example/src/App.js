@@ -11,7 +11,7 @@ const App = () => {
   )
   const [showAll, setShowAll] = useState(true)
 
-  useEffect(() => {
+  const hook = () => {
     console.log('effect')
     axios
       .get('https://json-sever-dev.run.goorm.site/notes')
@@ -19,8 +19,9 @@ const App = () => {
         console.log('promise fulfilled')
         setNotes(response.data)
       })
-  }, [])
-  console.log('render', notes.length, 'notes')
+  }
+
+  useEffect(hook, [])
   
   const addNote = (event) => {
     event.preventDefault()
@@ -29,18 +30,24 @@ const App = () => {
 	content from the component's newNote state. */
 	const noteObject = {
     	content: newNote,
-    	important: Math.random() < 0.5,
-    	id: notes.length + 1,
+    	important: Math.random() < 0.5
   	}
 	
+	axios
+	  .post('https://json-sever-dev.run.goorm.site/notes', noteObject)
+	  .then(response => {
+		setNotes(notes.concat(response.data))
+		setNewNote('')
+	})
+	  
 	/* The new note is added to the list of notes using the concat array method. 
 	This method does not mutate the original notes array, but rather creates a new
 	copy of the array with the new item added to the end. */
-	setNotes(notes.concat(noteObject))
+	//setNotes(notes.concat(noteObject))
 	
 	/* The event handler also resets the value of the controlled input element by
 	calling the setNewNote function of the newNote state. */
-  	setNewNote('')
+  	//setNewNote('')
   }
   
   /* The event handler is called "every time a change occurs" in the input element. 
