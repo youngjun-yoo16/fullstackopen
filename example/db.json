@@ -16,14 +16,9 @@
       "important": true
     },
     {
-      "content": "Sex",
+      "content": "POST is used to create new resources",
       "important": true,
       "id": 4
-    },
-    {
-      "content": "Poop",
-      "important": false,
-      "id": 5
     }
   ]
 }

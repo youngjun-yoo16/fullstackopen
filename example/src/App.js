@@ -62,6 +62,10 @@ const App = () => {
     setNewNote(event.target.value)
   }
   
+  const toggleImportnaceOf = (id) => {
+	console.log('importance of ' + id + ' needs to be toggled')
+  }
+  
   /* If the value of showAll is false, the notesToShow variable will be assigned
   to a list that only contains notes that have the important property set to true. */
   const notesToShow = showAll
@@ -78,7 +82,11 @@ const App = () => {
       </div>
       <ul>
 		{notesToShow.map(note => 
-		  <Note key={note.id} note={note} />
+		  <Note 
+			key={note.id} 
+			note={note} 
+			toggleImportance={()=>toggleImportnaceOf(note.id)}
+		  />
 		)}
       </ul>
       <form onSubmit={addNote}>
