@@ -16,7 +16,7 @@ const App = () => {
   }, [])
   
   const toggleImportnaceOf = id => {
-	//Finding the note we want to modify, and we then assign it to the note variable.
+	// Finding the note we want to modify, and we then assign it to the note variable.
 	const note = notes.find(n => n.id === id)
 	/* Creating a new object that is an exact copy of the old note, apart from the 
 	important property that has the value flipped. */

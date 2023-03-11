@@ -18,7 +18,10 @@ const App = () => {
 		  setPersons(response.data)
 	  })
   }
-  
+  /* The useEffect is always run after the component has been rendered. 
+  In our case, however, we only want to execute the effect along with the first render.
+  The second parameter of useEffect is used to specify how often the effect is run. 
+  If the second parameter is an empty array [], then the effect is only run along with the first render of the component. */
   useEffect(hook, [])
 	
   const checkDuplicateName = () => {
@@ -51,9 +54,15 @@ const App = () => {
 	  
 	  /* Add name to the existing phonebook only when the checkDuplicateName function
 	  returns false */
-	  if (!result) setPersons(persons.concat(nameObject))
-	  setNewName('')
-	  setNewNumber('')
+	  if (!result) {
+		axios
+		  .post('https://json-sever-dev.run.goorm.site/persons', nameObject)
+		  .then(response => {
+			setPersons(persons.concat(response.data))
+			setNewName('')
+	  	    setNewNumber('')
+		})
+	  }
   }
   
   const handleNameChange = (event) => setNewName(event.target.value)
