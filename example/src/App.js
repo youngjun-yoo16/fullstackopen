@@ -1,53 +1,33 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Note from './components/Note'
+import noteService from './services/notes'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState(
-	/* The placeholder text stored as the initial value of the newNote state appears
-  	in the input element. */
-    '' 
-  )
+  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('https://json-sever-dev.run.goorm.site/notes')
-      .then(response => {
-        console.log('promise fulfilled')
-        setNotes(response.data)
-      })
-  }
-
-  useEffect(hook, [])
+  useEffect(() => {
+	noteService
+	  .getAll()
+	  .then(initialNotes => {
+		setNotes(initialNotes)
+	  })
+  }, [])
   
   const addNote = (event) => {
     event.preventDefault()
-	  
-	/* Creating a new object for the note called noteObject that will receive its
-	content from the component's newNote state. */
 	const noteObject = {
     	content: newNote,
     	important: Math.random() < 0.5
   	}
 	
-	axios
-	  .post('https://json-sever-dev.run.goorm.site/notes', noteObject)
-	  .then(response => {
-		setNotes(notes.concat(response.data))
-		setNewNote('')
-	})
-	  
-	/* The new note is added to the list of notes using the concat array method. 
-	This method does not mutate the original notes array, but rather creates a new
-	copy of the array with the new item added to the end. */
-	//setNotes(notes.concat(noteObject))
-	
-	/* The event handler also resets the value of the controlled input element by
-	calling the setNewNote function of the newNote state. */
-  	//setNewNote('')
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')
+      })
   }
   
   /* The event handler is called "every time a change occurs" in the input element. 
@@ -63,7 +43,21 @@ const App = () => {
   }
   
   const toggleImportnaceOf = (id) => {
-	console.log('importance of ' + id + ' needs to be toggled')
+	//Finding the note we want to modify, and we then assign it to the note variable.
+	const note = notes.find(n => n.id === id)
+	/* Creating a new object that is an exact copy of the old note, apart from the 
+	important property that has the value flipped. */
+	const changedNote = { ...note, important: !note.important }
+	/* The map method creates a new array by mapping every item from the old array
+	into an item in the new array. For each note object, if note.id !== id is true
+	then we simpply copy the item from the old array into the new array. If the
+	condition is false, then the note object returned by the server is added to then
+	array instead. */
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
   }
   
   /* If the value of showAll is false, the notesToShow variable will be assigned
