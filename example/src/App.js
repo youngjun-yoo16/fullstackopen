@@ -15,6 +15,32 @@ const App = () => {
 	  })
   }, [])
   
+  const toggleImportnaceOf = id => {
+	//Finding the note we want to modify, and we then assign it to the note variable.
+	const note = notes.find(n => n.id === id)
+	/* Creating a new object that is an exact copy of the old note, apart from the 
+	important property that has the value flipped. */
+	const changedNote = { ...note, important: !note.important }
+	/* The map method creates a new array by mapping every item from the old array
+	into an item in the new array. For each note object, if note.id !== id is true
+	then we simply copy the item from the old array into the new array. If the
+	condition is false, then the note object returned by the server is added to then
+	array instead. */
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+	  .catch(error => {
+		alert(
+		`the note '${note.content}' was already deleted from the server`
+		)
+		/* The filter method returns a new array comprising only the items from the list 
+		for which the function that was passed as a parameter returns true. */
+		setNotes(notes.filter(note => note.id !== id))
+	})
+  }
+  	
   const addNote = (event) => {
     event.preventDefault()
 	const noteObject = {
@@ -40,24 +66,6 @@ const App = () => {
   const handleNoteChange = (event) => {
     console.log(event.target.value)
     setNewNote(event.target.value)
-  }
-  
-  const toggleImportnaceOf = (id) => {
-	//Finding the note we want to modify, and we then assign it to the note variable.
-	const note = notes.find(n => n.id === id)
-	/* Creating a new object that is an exact copy of the old note, apart from the 
-	important property that has the value flipped. */
-	const changedNote = { ...note, important: !note.important }
-	/* The map method creates a new array by mapping every item from the old array
-	into an item in the new array. For each note object, if note.id !== id is true
-	then we simpply copy the item from the old array into the new array. If the
-	condition is false, then the note object returned by the server is added to then
-	array instead. */
-    noteService
-      .update(id, changedNote)
-      .then(returnedNote => {
-        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-      })
   }
   
   /* If the value of showAll is false, the notesToShow variable will be assigned
