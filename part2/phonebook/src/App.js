@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('') 
-  const [filtered, setFiltered] = useState(persons)
+  const [filtered, setFiltered] = useState([])
   
-  const hook = () => {
-	  axios
-		.get("https://json-sever-dev.run.goorm.site/persons")
-	    .then(response => {
-		  setPersons(response.data)
-	  })
-  }
   /* The useEffect is always run after the component has been rendered. 
   In our case, however, we only want to execute the effect along with the first render.
   The second parameter of useEffect is used to specify how often the effect is run. 
-  If the second parameter is an empty array [], then the effect is only run along with the first render of the component. */
-  useEffect(hook, [])
+  If the second parameter is an empty array [], then the effect is only run along with the 
+  first render of the component. */
+  useEffect(() => {
+	personService
+	  .getAll()
+	  .then(initialEntries => {
+		setPersons(initialEntries)
+	})
+  }, []) 
 	
   const checkDuplicateName = () => {
 	   let find = false
@@ -39,8 +39,9 @@ const App = () => {
 	   if (result !== undefined) {
 		   find = true
 		   window.alert(`${newName} is already added to phonebook`)
+		   setNewName('')
+		   setNewNumber('')
 	   }
-	  
 	   return find
   }
   
@@ -55,12 +56,12 @@ const App = () => {
 	  /* Add name to the existing phonebook only when the checkDuplicateName function
 	  returns false */
 	  if (!result) {
-		axios
-		  .post('https://json-sever-dev.run.goorm.site/persons', nameObject)
-		  .then(response => {
-			setPersons(persons.concat(response.data))
-			setNewName('')
-	  	    setNewNumber('')
+		personService
+		   .create(nameObject)
+		   .then(initialEntries => {
+				setPersons(persons.concat(initialEntries))
+				setNewName('')
+				setNewNumber('')
 		})
 	  }
   }
@@ -71,10 +72,6 @@ const App = () => {
 
   const handleFilterChange = (event) => setNewFilter(event.target.value)
   
-  /* By using this Hook, you tell React that your component needs to do something after render. 
-  React will remember the function you passed (we’ll refer to it as our “effect”), 
-  and call it later after performing the DOM updates.
-  useEffect runs both after the first render and after every update. */
   useEffect(() => {
 	if (newFilter.length > 0) {
 		
