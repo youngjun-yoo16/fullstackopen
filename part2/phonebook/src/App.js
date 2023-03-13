@@ -23,7 +23,21 @@ const App = () => {
 		setPersons(initialEntries)
 	})
   }, []) 
-	
+  
+  const toggleDelete = id => {
+	const person = persons.find(p => p.id === id)
+	personService
+	  .remove(id)
+	  .then(initialEntries => {
+		 setPersons(persons.map(persons => person.id !== id ? person : initialEntries))
+	  })
+	  .catch(error => {
+		alert(
+		`the person '${person.name}' was already deleted from the server`
+		)
+	 })
+  }
+  
   const checkDuplicateName = () => {
 	   let find = false
 	   
@@ -97,7 +111,7 @@ const App = () => {
 		  buttonText="add"
 	  />
       <h3>Numbers</h3>
-	  <Persons filtered={filtered} />	
+	  <Persons filtered={filtered} toggleDelete={() => toggleDelete(filtered.id)} />	
     </div>
   )
 }
