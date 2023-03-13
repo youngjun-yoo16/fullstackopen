@@ -111,7 +111,7 @@ const App = () => {
 		  buttonText="add"
 	  />
       <h3>Numbers</h3>
-	  <Persons filtered={filtered} toggleDelete={() => toggleDelete(filtered.id)} />	
+	  <Persons filtered={filtered} toggleDelete={toggleDelete} />	
     </div>
   )
 }
