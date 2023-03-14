@@ -38,6 +38,8 @@ const App = () => {
 	}
   }
   
+  
+  
   const checkDuplicateName = () => {
 	   let find = false
 	   
@@ -50,13 +52,9 @@ const App = () => {
 	   
 	   /* result not equal to undefined means that there is a name that already
 	   exists in the phonebook. */
-	   if (result !== undefined) {
-		   find = true
-		   window.alert(`${newName} is already added to phonebook`)
-		   setNewName('')
-		   setNewNumber('')
-	   }
-	   return find
+	   if (result !== undefined) find = true
+	
+	   return [find, result]
   }
   
   const addInfo = (event) => {
@@ -65,19 +63,30 @@ const App = () => {
 		  name: newName,
 		  number: newNumber
 	  }
-	  const result = checkDuplicateName()
-	  
+	  const [found, personToUpdate] = checkDuplicateName()
+	
 	  /* Add name to the existing phonebook only when the checkDuplicateName function
 	  returns false */
-	  if (!result) {
+	  if (!found) {
 		personService
 		   .create(nameObject)
 		   .then(initialEntries => {
 				setPersons(persons.concat(initialEntries))
-				setNewName('')
-				setNewNumber('')
 		})
+	  } else {
+		  if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+			  const changedInfo = { ...personToUpdate, number: newNumber}
+			  personService
+			  /* We need to put changedInfo as a parameter instead of nameObject because using nameObject as a parameter
+			  creates a */ 
+			     .update(personToUpdate.id, changedInfo)
+			     .then(initialEntries => {
+					setPersons(persons.map(person => person.id !== personToUpdate.id ? person : initialEntries))   
+			  })
+		  }
 	  }
+	  setNewName('')
+      setNewNumber('')
   }
   
   const handleNameChange = (event) => setNewName(event.target.value)

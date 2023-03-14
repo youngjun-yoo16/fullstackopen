@@ -11,8 +11,15 @@ const create = newObject => {
   return request.then(response => response.data)
 }
 
+const update = (id, newObject) => {
+  /* Explain why we need to use an entirely new object with changed phone no. instead of using
+  only phone no. to update the db. */
+  const request = axios.put(`${baseUrl}/${id}`, newObject)
+  return request.then(response => response.data)
+}
+
 const remove = id => {
   return axios.delete(`${baseUrl}/${id}`)
 }
 
-export default { getAll, create, remove }
+export default { getAll, create, update, remove }
