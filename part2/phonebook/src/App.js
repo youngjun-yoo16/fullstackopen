@@ -25,17 +25,17 @@ const App = () => {
   }, []) 
   
   const toggleDelete = id => {
-	const person = persons.find(p => p.id === id)
-	personService
-	  .remove(id)
-	  .then(initialEntries => {
-		 setPersons(persons.map(persons => person.id !== id ? person : initialEntries))
-	  })
-	  .catch(error => {
-		alert(
-		`the person '${person.name}' was already deleted from the server`
-		)
-	 })
+	const personToDelete = persons.find(person => person.id === id)
+	if (window.confirm(`Delete ${personToDelete.name}?`)) {
+		personService
+		  .remove(id)
+		  .then(setPersons(persons.filter(person => person.id !== id)))
+		  .catch(error => {
+			alert(
+			`The person '${personToDelete.name}' was already deleted from the server.`
+			)
+		 })		
+	}
   }
   
   const checkDuplicateName = () => {

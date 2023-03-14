@@ -24,11 +24,6 @@
       "name": "John Doe",
       "number": "123-456-789",
       "id": 5
-    },
-    {
-      "name": "Mary Poppins",
-      "number": "234-232-2323",
-      "id": 6
     }
   ]
 }
