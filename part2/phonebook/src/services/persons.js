@@ -12,8 +12,16 @@ const create = newObject => {
 }
 
 const update = (id, newObject) => {
-  /* Explain why we need to use an entirely new object with changed phone no. instead of using
-  only phone no. to update the db. */
+  /* If we just put new number as a request along with the url, the json-server won't be able to
+  correctly store it. Since PUT request entirely replace the object of specified id, we need to 
+  follow the correct format of name, number, and id as keys along with their corresponding value. 
+  
+  For example: When we only provide the new number (99999999999) as a request:
+  
+  "99999999999": "",
+  "id": 5
+  
+  Such thing happens.*/
   const request = axios.put(`${baseUrl}/${id}`, newObject)
   return request.then(response => response.data)
 }

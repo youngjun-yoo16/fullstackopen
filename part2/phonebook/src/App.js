@@ -38,8 +38,6 @@ const App = () => {
 	}
   }
   
-  
-  
   const checkDuplicateName = () => {
 	   let find = false
 	   
@@ -65,7 +63,7 @@ const App = () => {
 	  }
 	  const [found, personToUpdate] = checkDuplicateName()
 	
-	  /* Add name to the existing phonebook only when the checkDuplicateName function
+	  /* Add new name to the existing phonebook only when the checkDuplicateName function
 	  returns false */
 	  if (!found) {
 		personService
@@ -74,11 +72,15 @@ const App = () => {
 				setPersons(persons.concat(initialEntries))
 		})
 	  } else {
+		  /* If a number is added to an already existing user, the new number will replace the old number.*/
 		  if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
 			  const changedInfo = { ...personToUpdate, number: newNumber}
 			  personService
-			  /* We need to put changedInfo as a parameter instead of nameObject because using nameObject as a parameter
-			  creates a */ 
+			  /* We can put either nameObject or changedInfo as a parameter. nameObject contains name and number without
+			  an id but since we are updating the info in the specified id, json-server automatically takes care of that for us.
+			  However, using changedInfo is safer because it just creates a copy of the person object that needs to be updated
+			  that alreday includes the id field as key and id as value. tldr; nameObject for adding entirely new name to the
+			  phonebook while changedInfo for updating the number to an already existing user. */ 
 			     .update(personToUpdate.id, changedInfo)
 			     .then(initialEntries => {
 					setPersons(persons.map(person => person.id !== personToUpdate.id ? person : initialEntries))   
