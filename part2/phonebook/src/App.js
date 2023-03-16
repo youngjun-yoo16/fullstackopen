@@ -4,12 +4,25 @@ import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import personService from './services/persons'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+	  return null
+  }
+	
+  return (
+	  <div className='notification'>
+		  {message}
+	  </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('') 
   const [filtered, setFiltered] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
   
   /* The useEffect is always run after the component has been rendered. 
   In our case, however, we only want to execute the effect along with the first render.
@@ -70,6 +83,12 @@ const App = () => {
 		   .create(nameObject)
 		   .then(initialEntries => {
 				setPersons(persons.concat(initialEntries))
+		   		setErrorMessage(
+					`Added ${nameObject.name}`
+				)
+				setTimeout(() => {
+					setErrorMessage(null)
+				}, 5000)
 		})
 	  } else {
 		  /* If a number is added to an already existing user, the new number will replace the old number.*/
@@ -83,7 +102,13 @@ const App = () => {
 			  phonebook while changedInfo for updating the number to an already existing user. */ 
 			     .update(personToUpdate.id, changedInfo)
 			     .then(initialEntries => {
-					setPersons(persons.map(person => person.id !== personToUpdate.id ? person : initialEntries))   
+					setPersons(persons.map(person => person.id !== personToUpdate.id ? person : initialEntries)) 
+				  	setErrorMessage(
+						`Changed ${changedInfo.name}'s number to ${newNumber}`
+					)
+					setTimeout(() => {
+						setErrorMessage(null)
+					}, 5000)
 			  })
 		  }
 	  }
@@ -115,6 +140,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+	  <Notification message={errorMessage} />
 	  <Filter text="filter shown with" setFilter={newFilter} onFilterChange={handleFilterChange}/>
       <h3>add a new</h3>
 	  <PersonForm addInfoToPhonebook={addInfo} nameField="name" setName={newName} onNameChange={handleNameChange} 
