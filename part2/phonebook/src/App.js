@@ -5,24 +5,18 @@ import Filter from './components/Filter'
 import personService from './services/persons'
 
 const Notification = ({ message }) => {
+  let className = 'error'
   if (message === null) {
 	  return null
   } 
 	
-  if (message.includes('Added') || message.includes("Changed")) {
-	  return (
-		  <div className='success'>
-			  {message}
-		  </div>
-	  )
-  }	else {
-	  return (
-		  <div className='error'>
-			  {message}
-		  </div>
-	  )
-  }
+  if (message.includes('Added') || message.includes("Changed")) className = 'success'
 
+  return (
+	  <div className={className}>
+		  {message}
+	  </div>
+  )
 }
 
 const App = () => {
