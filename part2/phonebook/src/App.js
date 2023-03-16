@@ -7,13 +7,22 @@ import personService from './services/persons'
 const Notification = ({ message }) => {
   if (message === null) {
 	  return null
-  }
+  } 
 	
-  return (
-	  <div className='notification'>
-		  {message}
-	  </div>
-  )
+  if (message.includes('Added') || message.includes("Changed")) {
+	  return (
+		  <div className='success'>
+			  {message}
+		  </div>
+	  )
+  }	else {
+	  return (
+		  <div className='error'>
+			  {message}
+		  </div>
+	  )
+  }
+
 }
 
 const App = () => {
@@ -89,7 +98,7 @@ const App = () => {
 				setTimeout(() => {
 					setErrorMessage(null)
 				}, 5000)
-		})
+		   })
 	  } else {
 		  /* If a number is added to an already existing user, the new number will replace the old number.*/
 		  if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -104,11 +113,19 @@ const App = () => {
 			     .then(initialEntries => {
 					setPersons(persons.map(person => person.id !== personToUpdate.id ? person : initialEntries)) 
 				  	setErrorMessage(
-						`Changed ${changedInfo.name}'s number to ${newNumber}`
+						`Changed ${changedInfo.name}'s number to ${changedInfo.number}`
 					)
 					setTimeout(() => {
 						setErrorMessage(null)
 					}, 5000)
+			  	 })
+			   	 .catch(error => {
+				  setErrorMessage(
+					  `Information of ${changedInfo.name} has already been removed from server`
+				  )
+				  setTimeout(() => {
+					  setErrorMessage(null)
+				  },5000)
 			  })
 		  }
 	  }
