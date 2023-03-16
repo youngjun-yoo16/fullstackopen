@@ -103,9 +103,9 @@ const App = () => {
 			  However, using changedInfo is safer because it just creates a copy of the person object that needs to be updated
 			  that alreday includes the id field as key and id as value. tldr; nameObject for adding entirely new name to the
 			  phonebook while changedInfo for updating the number to an already existing user. */ 
-			     .update(personToUpdate.id, changedInfo)
+			     .update(changedInfo.id, changedInfo)
 			     .then(initialEntries => {
-					setPersons(persons.map(person => person.id !== personToUpdate.id ? person : initialEntries)) 
+					setPersons(persons.map(person => person.id !== changedInfo.id ? person : initialEntries)) 
 				  	setErrorMessage(
 						`Changed ${changedInfo.name}'s number to ${changedInfo.number}`
 					)
@@ -114,17 +114,18 @@ const App = () => {
 					}, 5000)
 			  	 })
 			   	 .catch(error => {
-				  setErrorMessage(
-					  `Information of ${changedInfo.name} has already been removed from server`
-				  )
-				  setTimeout(() => {
-					  setErrorMessage(null)
-				  },5000)
-			  })
-		  }
-	  }
-	  setNewName('')
-      setNewNumber('')
+				  	setErrorMessage(
+						`Information of ${changedInfo.name} has already been removed from server`
+					)
+				  	setPersons(persons.filter(person => person.id !== changedInfo.id))
+					setTimeout(() => {
+						setErrorMessage(null)
+					},5000)
+			  	})
+		  	}
+	  	}
+	setNewName('')
+	setNewNumber('')
   }
   
   const handleNameChange = (event) => setNewName(event.target.value)
