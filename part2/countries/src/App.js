@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const Show = (props) => {
+	
+}
+
 const Countries = ({ filtered }) => {
     if (typeof filtered === 'string') {
         return <p>{filtered}</p>;
@@ -10,12 +14,10 @@ const Countries = ({ filtered }) => {
             <div>
                 <h1>{data.name.common}</h1>
                 <ul style={{ listStyle: 'none', padding: 0 }}>
-                    <li>capital {data.capital}</li>
-                    <li>area {data.area}</li>
+                    <li>Capital {data.capital}</li>
+                    <li>Area {data.area}</li>
                 </ul>
-                <p>
-                    <b>languages:</b>
-                </p>
+				<h2>Languages</h2>
                 <ul>
                     {Object.entries(data.languages).map(([key, value]) => (
                         <li key={key}>{value}</li>
