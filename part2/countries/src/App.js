@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Display = ({ country }) => (
+const Display = ({ country, getData }) => (
     <li>
 		{country.common}{' '}
-		<button>show</button>
-	</li>	
+		<button onClick={() => getData(country.common)}>show</button>
+	</li>
+	//<ShowView data={} />
 )
 
 const ShowView = ({ data }) => (
@@ -25,7 +26,7 @@ const ShowView = ({ data }) => (
 	</div>	
 )
 
-const Countries = ({ filtered }) => {
+const Countries = ({ filtered, getData }) => {
     if (typeof filtered === 'string') {
         return <p>{filtered}</p>
     } else if (filtered.length === 1) {
@@ -34,7 +35,7 @@ const Countries = ({ filtered }) => {
         return (
             <ul style={{ listStyle: 'none', padding: 0 }}>
                 {filtered.map((country) => (
-					<Display key={country.official} country={country} />
+					<Display key={country.official} country={country} getData={getData} />
                 ))}
             </ul>
         )
@@ -44,12 +45,20 @@ const Countries = ({ filtered }) => {
 const App = () => {
     const [query, setNewQuery] = useState('')
     const [countries, setNewCountries] = useState([])
-
+	
+	const getData = (countryName) => {
+		axios
+			.get(`https://restcountries.com/v3.1/name/${countryName}`)
+			.then(response => {
+				setNewCountries(response.data)
+		})
+	}
+	
     useEffect(() => {
         if (query.length > 0) {
             axios
 				.get('https://restcountries.com/v3.1/all?fields=name')
-				.then((response) => {
+				.then(response => {
                 const name = response.data.map((obj) => obj.name)
                 const filteredInfo = name.filter(({ common }) =>
                     common.toLowerCase().match(query.toLowerCase().trim())
@@ -62,12 +71,7 @@ const App = () => {
 				then the basic data of the country (eg. capital and area), 
 				its flag and the languages spoken are shown. */
                 } else if (filteredInfo.length === 1) {
-                    axios
-                        .get(`https://restcountries.com/v3.1/name/${filteredInfo[0].common}`)
-                        .then((response) => {
-                            setNewCountries(response.data)
-                            //console.log(response.data)
-                        })
+					getData(filteredInfo[0].common)
 				/* If there are ten or fewer countries, but more than one, 
 				then all countries matching the query are shown. */
                 } else {
@@ -84,7 +88,7 @@ const App = () => {
     return (
         <div>
             find countries <input value={query} onChange={hanleQueryChange} />
-            <Countries filtered={countries} />
+            <Countries filtered={countries} getData={getData} />
         </div>
     )
 }
