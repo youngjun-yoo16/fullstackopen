@@ -23,11 +23,12 @@ const ShowWeather = ({ weather }) => {
 	
 	const icon = weather.weather[0].icon
 	const weatherIconURL = `http://openweathermap.org/img/wn/${icon}@2x.png`
+	const temperature = (weather.main.temp - 273.15).toFixed(2)
 	
 	return (
 		<div>
 			<h2>Weather in {weather.name}</h2>
-			<p>Temperature {(weather.main.temp - 273.15).toFixed(2)} °C</p>
+			<p>Temperature {temperature} °C</p>
 			<img 
 				src={weatherIconURL} 
 				alt={weather.weather[0].main}
@@ -65,7 +66,10 @@ const Countries = ({ filtered, weather, getData }) => {
     if (typeof filtered === 'string') {
         return <p>{filtered}</p>
     } else if (filtered.length === 1) {
-        return <ShowView data={filtered[0]} weather={weather} />
+        return <ShowView 
+				   data={filtered[0]} 
+				   weather={weather} 
+			   />
     } else {
         return (
             <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -112,8 +116,8 @@ const App = () => {
             axios
 				.get(`https://restcountries.com/v3.1/all?fields=name`)
 				.then(response => {
-                const name = response.data.map((obj) => obj.name)
-                const filteredInfo = name.filter(({ common }) =>
+                	const name = response.data.map((obj) => obj.name)
+                	const filteredInfo = name.filter(({ common }) =>
                     common.toLowerCase().match(query.toLowerCase().trim())
                 )
 				/* When there are too many countries that match the query,
