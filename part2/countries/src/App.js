@@ -20,14 +20,20 @@ const Display = ({ country, getData }) => (
 const ShowWeather = ({ weather }) => {
 	console.log(weather)
 	if (Object.keys(weather).length === 0) return null
+	
+	const icon = weather.weather[0].icon
+	const weatherIconURL = `http://openweathermap.org/img/wn/${icon}@2x.png`
+	
 	return (
 		<div>
 			<h2>Weather in {weather.name}</h2>
 			<p>Temperature {(weather.main.temp - 273.15).toFixed(2)} °C</p>
-			<img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt={weather.weather[0].main}/>
+			<img 
+				src={weatherIconURL} 
+				alt={weather.weather[0].main}
+			/>
 			<p>Wind {weather.wind.speed} m/s</p>
 		</div>
-
 	)
 }
 
@@ -46,7 +52,11 @@ const ShowView = ({ data, weather }) => {
                 <li key={key}>{value}</li>
             ))}
         </ul>
-        <img className="country" src={data.flags.png} alt={data.name.common} />
+        <img 
+			className="country" 
+			src={data.flags.png}
+			alt={data.name.common} 
+		/>
 		<ShowWeather weather={weather} />
 	</div>	
 )}
@@ -60,7 +70,11 @@ const Countries = ({ filtered, weather, getData }) => {
         return (
             <ul style={{ listStyle: 'none', padding: 0 }}>
                 {filtered.map((country) => (
-					<Display key={country.official} country={country} getData={getData} />
+					<Display 
+						key={country.official} 
+						country={country} 
+						getData={getData} 
+					/>
                 ))}
             </ul>
         )
@@ -73,8 +87,9 @@ const App = () => {
 	const [weather, setNewWeather] = useState({})
 	
 	const getData = (countryName) => {
+		const url = `https://restcountries.com/v3.1/name/${countryName}`
 		axios
-			.get(`https://restcountries.com/v3.1/name/${countryName}`)
+			.get(url)
 			.then(response => {
 				getWeather(response.data[0].capital)
 				setNewCountries(response.data)
@@ -82,8 +97,9 @@ const App = () => {
 	}
 	
 	const getWeather = (capitalName) => {
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${capitalName}&appid=${process.env.REACT_APP_API_KEY}`
 		axios
-			.get(`https://api.openweathermap.org/data/2.5/weather?q=${capitalName}&appid=${process.env.REACT_APP_API_KEY}`)
+			.get(url)
 			.then(response => {
 				console.log(response.data)
 				console.log(response.data.main.temp)
@@ -94,7 +110,7 @@ const App = () => {
     useEffect(() => {
         if (query.length > 0) {
             axios
-				.get('https://restcountries.com/v3.1/all?fields=name')
+				.get(`https://restcountries.com/v3.1/all?fields=name`)
 				.then(response => {
                 const name = response.data.map((obj) => obj.name)
                 const filteredInfo = name.filter(({ common }) =>
@@ -125,7 +141,11 @@ const App = () => {
     return (
         <div>
             find countries <input value={query} onChange={hanleQueryChange} />
-            <Countries filtered={countries} weather={weather} getData={getData} />
+            <Countries 
+				filtered={countries} 
+				weather={weather} 
+				getData={getData} 
+			/>
         </div>
     )
 }
