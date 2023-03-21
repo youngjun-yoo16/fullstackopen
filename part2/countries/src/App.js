@@ -17,8 +17,16 @@ const Display = ({ country, getData }) => (
 	</li>
 )
 
-const ShowView = ({ data }) => (
-    <div>
+const ShowWeather = ({ weather }) => {
+	console.log(weather)
+	if (Object.keys(weather).length === 0) return null
+	return <p>Temperature {(weather.main.temp - 273.15).toFixed(2)} Celsius</p>
+}
+
+const ShowView = ({ data, weather }) => {
+	console.log(weather)
+	console.log(data)
+    return ( <div>
         <h1>{data.name.common}</h1>
         <ul style={{ listStyle: 'none', padding: 0 }}>
             <li>Capital {data.capital}</li>
@@ -31,14 +39,16 @@ const ShowView = ({ data }) => (
             ))}
         </ul>
         <img className="country" src={data.flags.png} alt={data.name.common} />
+		<h2>Weather in {data.capital}</h2>
+		<ShowWeather weather={weather} />
 	</div>	
-)
+)}
 
-const Countries = ({ filtered, getData }) => {
+const Countries = ({ filtered, weather, getData }) => {
     if (typeof filtered === 'string') {
         return <p>{filtered}</p>
     } else if (filtered.length === 1) {
-        return <ShowView data={filtered[0]} />
+        return <ShowView data={filtered[0]} weather={weather} />
     } else {
         return (
             <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -53,12 +63,24 @@ const Countries = ({ filtered, getData }) => {
 const App = () => {
     const [query, setNewQuery] = useState('')
     const [countries, setNewCountries] = useState([])
+	const [weather, setNewWeather] = useState({})
 	
 	const getData = (countryName) => {
 		axios
 			.get(`https://restcountries.com/v3.1/name/${countryName}`)
 			.then(response => {
+				getWeather(response.data[0].capital)
 				setNewCountries(response.data)
+		})
+	}
+	
+	const getWeather = (capitalName) => {
+		axios
+			.get(`https://api.openweathermap.org/data/2.5/weather?q=${capitalName}&appid=${process.env.REACT_APP_API_KEY}`)
+			.then(response => {
+				console.log(response.data)
+				console.log(response.data.main.temp)
+				setNewWeather(response.data)
 		})
 	}
 	
@@ -96,7 +118,7 @@ const App = () => {
     return (
         <div>
             find countries <input value={query} onChange={hanleQueryChange} />
-            <Countries filtered={countries} getData={getData} />
+            <Countries filtered={countries} weather={weather} getData={getData} />
         </div>
     )
 }
