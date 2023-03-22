@@ -7,7 +7,7 @@ import axios from 'axios';
 3. getData function gets the data of that country from the REST Countries API.
 4. Sets 'countries' state with the data of that country. 
 5. The page gets re-rendered and calls Countries component again. 
-6. Since the length of an array is 1, it goes through the second if statement. 
+6. Since the length of an array is 1 [[{...}]], it goes through the second if statement. 
 7. Calls ShowView component with the data of that country as an argument. 
 8. ShowView component displays the view of the country. */
 const Display = ({ country, getData }) => (
@@ -18,7 +18,6 @@ const Display = ({ country, getData }) => (
 )
 
 const ShowWeather = ({ weather }) => {
-	console.log(weather)
 	if (Object.keys(weather).length === 0) return null
 	
 	const icon = weather.weather[0].icon
@@ -38,10 +37,8 @@ const ShowWeather = ({ weather }) => {
 	)
 }
 
-const ShowView = ({ data, weather }) => {
-	console.log(weather)
-	console.log(data)
-    return ( <div>
+const ShowView = ({ data, weather }) => (
+	<div>
         <h1>{data.name.common}</h1>
         <ul style={{ listStyle: 'none', padding: 0 }}>
             <li>Capital {data.capital}</li>
@@ -60,7 +57,7 @@ const ShowView = ({ data, weather }) => {
 		/>
 		<ShowWeather weather={weather} />
 	</div>	
-)}
+)
 
 const Countries = ({ filtered, weather, getData }) => {
     if (typeof filtered === 'string') {
@@ -85,6 +82,23 @@ const Countries = ({ filtered, weather, getData }) => {
     }
 }
 
+/* Workflow for rendering the page:
+1. Typing the country name on the input field causes useEffect to take action. 
+2. When there is only one country matching the query, it calls getData(filteredInfo[0].common)
+3. getData() function works by getting the information about the country inputted as an argument. 
+4. It sets 'countries' state with 'response.data'. 
+5. Page gets re-rendered since the value of 'countries' state has changed. 
+6. Re-rendered App component returns Countries component as usual.
+7. Since one of the parameters of the Countries component, filtered, has a length of 1, it returns ShowView component. 
+8. Here, the 'weather' state we passed from the App component to Countries component still has a null value since we haven't yet set any new value to it. 
+9. ShowView component returns the ShowWeather component and since 'weather' object has no value in it, ShowWeather component returns null. 
+10. This is how first re-rendering gets finished. 
+11. getWeather(response.data[0].capital) function finally gets called in the previous call of getData() function. 
+12. It gets the information about the capital name inputted as an argument and sets 'weather' state with 'response.data'. 
+13. Page gets re-rendered since the value of 'weather' state has changed. 
+14. Re-rendered App component once again returns Countries component. 
+15. Countries component returns ShowView component and since 'weather' state now contains some value in it, 
+    ShowWeather component gets successfully rendered without returning null. */
 const App = () => {
     const [query, setNewQuery] = useState('')
     const [countries, setNewCountries] = useState([])
@@ -105,8 +119,6 @@ const App = () => {
 		axios
 			.get(url)
 			.then(response => {
-				console.log(response.data)
-				console.log(response.data.main.temp)
 				setNewWeather(response.data)
 		})
 	}
