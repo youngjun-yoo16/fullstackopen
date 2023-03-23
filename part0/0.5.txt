@@ -1,0 +1,19 @@
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+Server-->Browser: HTML code
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+Server-->Browser: spa.js
+
+note over Browser:
+Browser starts executing JS code,
+requesting JSON data from server 
+end note
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: [{ content: "single page app does not reload the whole page", date: "2019-05-25T15:15:59.905Z" }, ...]
+
+note over Browser:
+Browser executes event handler,
+rendering notes to display
+end note
