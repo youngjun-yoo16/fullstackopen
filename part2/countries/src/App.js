@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Countries from './components/Countries'
-import axios from 'axios';
+import countryService from './services/countries'
 
 /* Workflow for rendering the page:
 1. Typing the country name on the input field causes useEffect to take action. 
@@ -26,32 +26,33 @@ const App = () => {
 	
 	const getData = (countryName) => {
 		const url = `https://restcountries.com/v3.1/name/${countryName}`
-		axios
-			.get(url)
-			.then(response => {
-				getWeather(response.data[0].capital)
-				setNewCountries(response.data)
+		countryService
+			.getAll(url)
+			.then(countryData => {
+				getWeather(countryData[0].capital)
+				setNewCountries(countryData)
 		})
 	}
 	
 	const getWeather = (capitalName) => {
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${capitalName}&appid=${process.env.REACT_APP_API_KEY}`
-		axios
-			.get(url)
-			.then(response => {
-				setNewWeather(response.data)
+		countryService
+			.getAll(url)
+			.then(capitalWeather => {
+				setNewWeather(capitalWeather)
 		})
 	}
 	
     useEffect(() => {
         if (query.length > 0) {
-            axios
-				.get(`https://restcountries.com/v3.1/all?fields=name`)
-				.then(response => {
-                	const name = response.data.map((obj) => obj.name)
-                	const filteredInfo = name.filter(({ common }) =>
+			const url = `https://restcountries.com/v3.1/all?fields=name`
+			countryService
+				.getAll(url)
+				.then(countryNames => {
+					const name = countryNames.map((obj) => obj.name)
+					const filteredInfo = name.filter(({ common }) =>
                     common.toLowerCase().match(query.toLowerCase().trim())
-                )
+                )	
 				/* When there are too many countries that match the query,
 				then the user is prompted to make their query more specific. */
                 if (filteredInfo.length > 10) {
