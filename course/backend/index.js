@@ -46,13 +46,33 @@ app.delete('api/notes/:id', (request, response) => {
 	response.status(204).end()
 })
 
-app.post('/api/notes', (request, response) => {
+const generateId = () => {
 	const maxId = notes.length > 0
+		/* notes.map(n => n.id) creates a new array that contains all the ids of the notes. 
+		Math.max returns the maximum value of the numbers that are passed to it. However, 
+		notes.map(n => n.id) is an array so it can't directly be given as a parameter to Math.max. 
+		The array can be transformed into individual numbers by using the "three dot" spread syntax */
 		? Math.max(...notes.map(note => note.id))
 		: 0
+	return maxId + 1
+}
+app.post('/api/notes', (request, response) => {
+	const body = request.body
 	
-	const note = request.body
-	note.id = maxId + 1
+	if (!body.content) {
+		return response.status(400).json({
+			error: 'content missing'
+		})
+	}
+	
+	const note = {
+		content: body.content,
+		/* If the data saved in the body variable has the important property, 
+		the expression will evaluate to its value. If the property does not exist,
+		then the expression will evaluate to false which is defined on the right-hand side */
+		important: body.important || false,
+		id: generateId(),
+	}
 	
 	notes = notes.concat(note)
 	
