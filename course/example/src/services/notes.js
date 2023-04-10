@@ -2,7 +2,7 @@ import axios from 'axios'
 
 /* The react app running in the browser now fetches the data from 
 node/express-server that runs in localhost:3001. */
-const baseUrl = 'https://backend-server.run.goorm.site/api/notes'
+const baseUrl = '/api/notes'
 
 const getAll = () => {
   const request = axios.get(baseUrl)
