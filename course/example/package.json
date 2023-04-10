@@ -18,6 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "json-server -H 0.0.0.0 -p3001 --watch db.json"
+	"proxy": "https://backend-server.run.goorm.site/"
   },
   "eslintConfig": {
     "extends": [
