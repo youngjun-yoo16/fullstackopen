@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'https://json-sever-dev.run.goorm.site/persons'
+const baseUrl = '/api/persons'
 
 const getAll = () => {
   const request = axios.get(baseUrl)
