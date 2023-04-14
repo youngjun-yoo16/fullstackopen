@@ -1,34 +1,16 @@
+/* It's important that dotenv gets imported before the note model is imported. 
+This ensures that the environment variables from the .env file are available globally 
+before the code from the other modules is imported. */
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const dotenv = require("dotenv")
+const Note = require('./models/note')
 const app = express()
 
-dotenv.config()
 app.use(cors())
 app.use(express.json())
 app.use(express.static('build'))
-
-const url =
-  `mongodb+srv://fullstack:${process.env.MONGO_PASSWORD}@fullstackopen.toxqsyf.mongodb.net/noteApp?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-
-noteSchema.set('toJSON', {
-	transform: (document, returnedObject) => {
-		returnedObject.id = returnedObject._id.toString()
-		delete returnedObject._id
-		delete returnedObject.__v
-	}
-})
-
-const Note = mongoose.model('Note', noteSchema)
 
 let notes = [
   {
@@ -108,7 +90,7 @@ app.post('/api/notes', (request, response) => {
 	response.json(note)
 })
 
-const PORT = process.env.PORT || 3002
+const PORT = process.env.PORT 
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
 })
