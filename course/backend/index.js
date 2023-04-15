@@ -21,17 +21,6 @@ app.use(express.json())
 app.use(requestLogger)
 app.use(cors())
 
-const generateId = () => {
-	const maxId = notes.length > 0
-		/* notes.map(n => n.id) creates a new array that contains all the ids of the notes. 
-		Math.max returns the maximum value of the numbers that are passed to it. However, 
-		notes.map(n => n.id) is an array so it can't directly be given as a parameter to Math.max. 
-		The array can be transformed into individual numbers by using the "three dot" spread syntax */
-		? Math.max(...notes.map(note => note.id))
-		: 0
-	return maxId + 1
-}
-
 app.post('/api/notes', (request, response) => {
 	const body = request.body
 	
@@ -49,6 +38,51 @@ app.post('/api/notes', (request, response) => {
 	note.save().then(savedNote => {
 		response.json(savedNote)
 	})
+})
+
+app.get('/api/notes', (request, response) => {
+	Note.find({}).then(notes => {
+		response.json(notes)
+	})
+})
+
+app.get('/api/notes/:id', (request, response, next) => {
+	Note.findById(request.params.id)
+		.then(note => {
+			if (note) {
+				response.json(note)
+			} else {
+				response.status(404).end()
+			}
+		})
+		.catch(error => next(error))
+})
+
+app.put('/api/notes/:id', (request, response, next) => {
+	const body = request.body
+	
+	const note = {
+		content: body.content,
+		important: body.important,
+	}
+	
+	Note.findByIdAndUpdate(request.params.id, note, { new: true })
+	/* By default, the updatedNote parameter of the event handler 
+	receives the original document without the modifications.  
+	We added the optional { new: true } parameter, which will cause our 
+	event handler to be called with the new modified document instead of the original.*/
+		.then(updatedNote => {
+			response.json(updatedNote)
+		})
+		.catch(error => next(error))
+})
+
+app.delete('api/notes/:id', (request, response, next) => {
+	Note.findByIdAndRemove(request.params.id)
+		.then(result => {
+			response.status(204).end()
+		})
+		.catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -71,34 +105,9 @@ const errorHandler = (error, request, response, next) => {
 // handler of requests with result to errors
 app.use(errorHandler)
 
-app.get('/', (request, response) => {
+/* app.get('/', (request, response) => {
 	response.send('<h1>Hello World!</h1>')
-})
-
-app.get('/api/notes', (request, response) => {
-	Note.find({}).then(notes => {
-		response.json(notes)
-	})
-})
-
-app.get('/api/notes/:id', (request, response, next) => {
-	Note.findById(request.params.id)
-		.then(note => {
-			if (note) {
-				response.json(note)
-			} else {
-				response.status(404).end()
-			}
-		})
-		.catch(error => next(error))
-})
-
-app.delete('api/notes/:id', (request, response) => {
-	const id = Number(request.params.id)
-	notes = notes.filter(note => note.id !== id)
-	
-	response.status(204).end()
-})
+}) */
 
 const PORT = process.env.PORT 
 app.listen(PORT, () => {
