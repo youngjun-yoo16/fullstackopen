@@ -21,7 +21,10 @@ morgan.token('req', (req, res) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req'))
 
 app.get('/info', (request, response) => {
-	response.send(`Phonebook has info for ${persons.length} people <br/><br/> ${Date()}`)
+	/* https://kb.objectrocket.com/mongo-db/mongoose-count-726 */
+	Person.countDocuments({}).then(result => {
+		response.send(`Phonebook has info for ${result} people <br/><br/> ${Date()}`)
+	})
 })
 
 app.get('/api/persons', (request, response) => {
