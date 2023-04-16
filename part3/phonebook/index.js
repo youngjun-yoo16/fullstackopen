@@ -1,3 +1,6 @@
+/* It's important that dotenv gets imported before the note model is imported. 
+This ensures that the environment variables from the .env file are available globally 
+before the code from the other modules is imported. */
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
@@ -80,6 +83,21 @@ app.post('/api/persons', (request, response) => {
 		console.log(`Added ${savedPerson.name} number ${savedPerson.number} to phonebook`)
 		response.json(savedPerson)
 	})
+})
+
+app.put('/api/persons/:id', (request, response) => {
+	const body = request.body
+	
+	const person = {
+		name: body.name,
+		number: body.number,
+	}
+	
+	Person.findByIdAndUpdate(request.params.id, person, { new: true })
+		.then(updatedPerson => {
+			response.json(updatedPerson)
+		})
+		.catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
