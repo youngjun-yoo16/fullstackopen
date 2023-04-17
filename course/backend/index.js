@@ -21,23 +21,19 @@ app.use(express.json())
 app.use(requestLogger)
 app.use(cors())
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
 	const body = request.body
-	
-	if (body.content === undefined) {
-		return response.status(400).json({
-			error: 'content missing'
-		})
-	}
 	
 	const note = new Note({
 		content: body.content,
 		important: body.important || false,
 	})
 	
-	note.save().then(savedNote => {
-		response.json(savedNote)
-	})
+	note.save()
+		.then(savedNote => {
+			response.json(savedNote)
+		})
+		.catch(error => next(error))
 })
 
 app.get('/api/notes', (request, response) => {
@@ -59,18 +55,17 @@ app.get('/api/notes/:id', (request, response, next) => {
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
-	const body = request.body
+	const { content, important } = request.body
 	
-	const note = {
-		content: body.content,
-		important: body.important,
-	}
-	
-	Note.findByIdAndUpdate(request.params.id, note, { new: true })
-	/* By default, the updatedNote parameter of the event handler 
-	receives the original document without the modifications.  
-	We added the optional { new: true } parameter, which will cause our 
-	event handler to be called with the new modified document instead of the original.*/
+	Note.findByIdAndUpdate(
+		request.params.id, note, 
+		{ content, important },
+		{ new: true, runValidators: true, context: 'query' }
+		/* By default, the updatedNote parameter of the event handler 
+		receives the original document without the modifications.  
+		We added the optional { new: true } parameter, which will cause our 
+		event handler to be called with the new modified document instead of the original. */
+	)
 		.then(updatedNote => {
 			response.json(updatedNote)
 		})
@@ -96,8 +91,10 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  } 
+	  return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+	  return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
