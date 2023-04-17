@@ -58,7 +58,7 @@ app.put('/api/notes/:id', (request, response, next) => {
 	const { content, important } = request.body
 	
 	Note.findByIdAndUpdate(
-		request.params.id, note, 
+		request.params.id, 
 		{ content, important },
 		{ new: true, runValidators: true, context: 'query' }
 		/* By default, the updatedNote parameter of the event handler 
