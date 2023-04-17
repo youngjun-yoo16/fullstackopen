@@ -3,7 +3,6 @@ This ensures that the environment variables from the .env file are available glo
 before the code from the other modules is imported. */
 require('dotenv').config()
 const express = require('express')
-const mongoose = require('mongoose')
 const cors = require('cors')
 const Note = require('./models/note')
 const app = express()
@@ -58,12 +57,12 @@ app.put('/api/notes/:id', (request, response, next) => {
 	const { content, important } = request.body
 	
 	Note.findByIdAndUpdate(
-		request.params.id, 
+		request.params.id,
 		{ content, important },
 		{ new: true, runValidators: true, context: 'query' }
-		/* By default, the updatedNote parameter of the event handler 
-		receives the original document without the modifications.  
-		We added the optional { new: true } parameter, which will cause our 
+		/* By default, the updatedNote parameter of the event handler
+		receives the original document without the modifications.
+		We added the optional { new: true } parameter, which will cause our
 		event handler to be called with the new modified document instead of the original. */
 	)
 		.then(updatedNote => {
@@ -74,14 +73,14 @@ app.put('/api/notes/:id', (request, response, next) => {
 
 app.delete('api/notes/:id', (request, response, next) => {
 	Note.findByIdAndRemove(request.params.id)
-		.then(result => {
+		.then(() => {
 			response.status(204).end()
 		})
 		.catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
-	response.status(404).send({ error: "unknown endpoint "})	
+	response.status(404).send({ error: 'unknown endpoint' })	
 }
 
 // handler of requests with unknown endpoint
