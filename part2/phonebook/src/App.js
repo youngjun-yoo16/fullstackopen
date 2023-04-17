@@ -97,7 +97,7 @@ const App = () => {
 				setErrorMessage(error.response.data.error)
 				setTimeout(() => {
 					setErrorMessage(null)
-				},5000)
+				}, 5000)
 		})
 	  } else {
 		  /* If a number is added to an already existing user, the new number will replace the old number.*/
@@ -120,13 +120,17 @@ const App = () => {
 					}, 5000)
 			  	 })
 			   	 .catch(error => {
-				  	setErrorMessage(
-						`Information of ${changedInfo.name} has already been removed from server`
-					)
-				  	setPersons(persons.filter(person => person.id !== changedInfo.id))
+				  	if (error.response.data.error.includes('shorter') || error.response.data.error.includes('not a valid')) {
+						setErrorMessage(error.response.data.error)
+					} else {
+						setErrorMessage(
+							`Information of ${changedInfo.name} has already been removed from server`
+						)
+						setPersons(persons.filter(person => person.id !== changedInfo.id))
+					}
 					setTimeout(() => {
 						setErrorMessage(null)
-					},5000)
+					}, 5000)
 			  	})
 		  	}
 	  	}
