@@ -1,9 +1,8 @@
-/* It's important that dotenv gets imported before the note model is imported. 
-This ensures that the environment variables from the .env file are available globally 
+/* It's important that dotenv gets imported before the note model is imported.
+This ensures that the environment variables from the .env file are available globally
 before the code from the other modules is imported. */
 require('dotenv').config()
 const express = require('express')
-const mongoose = require('mongoose')
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/people')
@@ -13,8 +12,8 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
 
-morgan.token('req', (req, res) => { 
-	if (req.method === "POST") return JSON.stringify(req.body)
+morgan.token('req', (req) => {
+	if (req.method === 'POST') return JSON.stringify(req.body)
 	else return null
 })
 
@@ -28,7 +27,7 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-	console.log("Phonebook:")
+	console.log('Phonebook:')
 	Person.find({}).then(people => {
 		response.json(people)
 		people.forEach(person => {
@@ -37,7 +36,7 @@ app.get('/api/persons', (request, response) => {
 	})
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
 	Person.findById(request.params.id)
 		.then(person => {
 			if (person) {
@@ -49,22 +48,22 @@ app.get('/api/persons/:id', (request, response) => {
 		.catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
 	Person.findByIdAndRemove(request.params.id)
-		.then(result => {
+		.then(() => {
 			response.status(204).end()
-	})
-	.catch(error => next(error))
+		})
+		.catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
 	const body = request.body
-	
+
 	const person = new Person({
 		name: body.name,
 		number: body.number,
 	})
-	
+
 	person.save()
 		.then(savedPerson => {
 			console.log(`Added ${savedPerson.name} number ${savedPerson.number} to phonebook`)
@@ -75,9 +74,9 @@ app.post('/api/persons', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
 	const { name, number } = request.body
-	
+
 	Person.findByIdAndUpdate(
-		request.params.id, 
+		request.params.id,
 		{ name, number },
 		{ new: true, runValidators: true, context: 'query' }
 	)
@@ -88,21 +87,21 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+	console.error(error.message)
 
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === 'ValidationError') {
-	return response.status(400).json({ error: error.message })
-  }
+	if (error.name === 'CastError') {
+		return response.status(400).send({ error: 'malformatted id' })
+	} else if (error.name === 'ValidationError') {
+		return response.status(400).json({ error: error.message })
+	}
 
-  next(error)
+	next(error)
 }
 
 // this has to be the last loaded middleware.
 app.use(errorHandler)
 
-const PORT = process.env.PORT 
+const PORT = process.env.PORT
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
 })
