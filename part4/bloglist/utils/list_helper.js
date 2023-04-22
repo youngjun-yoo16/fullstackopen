@@ -16,7 +16,7 @@ const favoriteBlog = (blogs) => {
 	else if (blogs.length === 1) {
 		return {title: blogs[0].title, author: blogs[0].author, likes: blogs[0].likes}
 	} else {
-		const favorite = blogs.reduce((prev, current) => (prev.likes > current.likes) ? prev : current, null)
+		const favorite = blogs.reduce((prev, current) => prev.likes > current.likes ? prev : current, 0)
 		return {title: favorite.title, author: favorite.author, likes: favorite.likes}
 	}
 }
