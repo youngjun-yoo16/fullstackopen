@@ -24,6 +24,8 @@ const favoriteBlog = (blogs) => {
     }
 }
 
+const mostFrequent = (hashmap) => Object.keys(hashmap).reduce((a, b) => hashmap[a] > hashmap[b] ? a : b)
+
 const mostBlogs = (blogs) => {
 	if (blogs.length === 0) return undefined
 	else if (blogs.length === 1) {
@@ -35,7 +37,7 @@ const mostBlogs = (blogs) => {
 				return map
 			}, {}
 		)
-		const authorWithMostBlogs = Object.keys(hashmap).reduce((a, b) => hashmap[a] > hashmap[b] ? a : b)
+		const authorWithMostBlogs = mostFrequent(hashmap)
 		return { author: authorWithMostBlogs, blogs: hashmap[authorWithMostBlogs] }
 	}
 }
@@ -51,7 +53,7 @@ const mostLikes = (blogs) => {
 				return map
 			}, {}
 		)
-		const authorWithMostLikes = Object.keys(hashmap).reduce((a, b) => hashmap[a] > hashmap[b] ? a : b)
+		const authorWithMostLikes = mostFrequent(hashmap)
 		return { author: authorWithMostLikes, likes: hashmap[authorWithMostLikes] }
 	}
 }
