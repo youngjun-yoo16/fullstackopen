@@ -29,16 +29,12 @@ const mostBlogs = (blogs) => {
 	else if (blogs.length === 1) {
 		return { author: blogs[0].author, blogs: 1 }
     } else {
-		const authors = blogs.map(blog => blog.author)
-		const hashmap = authors.reduce(
-			(map, author) => {
-				//console.log(map)
-				//console.log(author)
-				map[author] = (map[author] || 0) + 1
+		const hashmap = blogs.reduce(
+			(map, blog) => {
+				map[blog.author] = (map[blog.author] || 0) + 1
 				return map
 			}, {}
 		)
-		//console.log(hashmap)
 		const authorWithMostBlogs = Object.keys(hashmap).reduce((a, b) => hashmap[a] > hashmap[b] ? a : b)
 		return { author: authorWithMostBlogs, blogs: hashmap[authorWithMostBlogs] }
 	}
