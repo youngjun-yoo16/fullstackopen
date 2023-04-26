@@ -11,11 +11,16 @@ By doing this, we ensure that the database is in the same state before every tes
 beforeEach(async () => {
   await Note.deleteMany({})
 	
-  let noteObject = new Note(helper.initialNotes[0])
-  await noteObject.save()
-	
-  noteObject = new Note(helper.initialNotes[1])
-  await noteObject.save()
+/* The noteObjects variable is assigned to an array of Mongoose objects that are created 
+with the Note constructor for each of the notes in the helper.initialNotes array. */
+  const noteObjects = helper.initialNotes
+    .map(note => new Note(note))
+  const promiseArray = noteObjects.map(note => note.save())
+/* The Promise.all method can be used for transforming an array of promises into a single promise, 
+that will be fulfilled once every promise in the array passed to it as a parameter is resolved. 
+The last line of code await Promise.all(promiseArray) waits until every promise for saving a note is finished, 
+meaning that the database has been initialized.*/ 
+  await Promise.all(promiseArray)
 })
 
 test('notes are returned as json', async () => {
