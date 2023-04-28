@@ -37,7 +37,7 @@ test('blogs are returned as json', async () => {
 test('there are two notes', async () => {
   const response = await api.get('/api/blogs')
 
-  expect(response.body).toHaveLength(2)
+  expect(response.body).toHaveLength(initialBlogs.length)
 })
 
 test('blog posts have a unique identifier property named id', async () => {
@@ -45,6 +45,30 @@ test('blog posts have a unique identifier property named id', async () => {
   
   const ids = response.body.map(blog => blog.id)
   ids.forEach(id => expect(id).toBeDefined())
+})
+
+test('a valid note can be added', async () => {
+  const newBlog = {
+    title: 'For the HTTP POST request test',
+    author: 'John Doe',
+	url: 'http://fullstackopen.com',
+	likes: 12
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const contents = response.body.map(blog => blog.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(contents).toContain(
+    'For the HTTP POST request test'
+  )
 })
 
 afterAll(async () => {
