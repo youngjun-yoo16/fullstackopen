@@ -47,7 +47,7 @@ test('blog posts have a unique identifier property named id', async () => {
   ids.forEach(id => expect(id).toBeDefined())
 })
 
-test('a valid note can be added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'For the HTTP POST request test',
     author: 'John Doe',
@@ -68,6 +68,29 @@ test('a valid note can be added', async () => {
   expect(response.body).toHaveLength(initialBlogs.length + 1)
   expect(contents).toContain(
     'For the HTTP POST request test'
+  )
+})
+
+test('missing likes property will default to the value 0', async () => {
+  const newBlog = {
+    title: 'Blog without the likes property',
+    author: 'Ada Lovelace',
+	url: 'http://dummytest.com'
+  }
+  
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const contents = response.body.map(blog => blog.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(contents).toContain(
+    'Blog without the likes property'
   )
 })
 
