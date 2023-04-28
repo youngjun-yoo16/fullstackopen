@@ -17,6 +17,13 @@ test('there are two notes', async () => {
   expect(response.body).toHaveLength(2)
 })
 
+test('blog posts have a unique identifier property named id', async () => {
+  const response = await api.get('/api/blogs')
+  
+  const ids = response.body.map(blog => blog.id)
+  ids.forEach(id => expect(id).toBeDefined())
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
