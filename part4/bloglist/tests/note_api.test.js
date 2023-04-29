@@ -94,6 +94,22 @@ test('missing likes property will default to the value 0', async () => {
   )
 })
 
+test('missing title or url properties will respond with the status code 400', async () => {
+  const newBlog = {
+    author: 'Ada Lovelace',
+	likes: 23
+  }
+  
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  expect(response.body).toHaveLength(initialBlogs.length)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
