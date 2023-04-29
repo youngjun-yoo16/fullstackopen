@@ -1,30 +1,14 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
-const Blog = require('../models/blog')
 
-const initialBlogs = [
-  {
-    title: 'Day of my life',
-	author: 'Youngjun Yoo',
- 	url: 'https://www.myblog.com',
-	likes: 15
-  },
-  {
-    title: 'Guide to SWE Intern 101',
-	author: 'Joma Tech',
- 	url: 'https://www.jomatech.com',
-	likes: 55
-  },
-]
+const Blog = require('../models/blog')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -37,7 +21,7 @@ test('blogs are returned as json', async () => {
 test('there are two notes', async () => {
   const response = await api.get('/api/blogs')
 
-  expect(response.body).toHaveLength(initialBlogs.length)
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
 test('blog posts have a unique identifier property named id', async () => {
@@ -59,13 +43,12 @@ test('a valid blog can be added', async () => {
     .post('/api/blogs')
     .send(newBlog)
     .expect(201)
-    .expect('Content-Type', /application\/json/)
-
-  const response = await api.get('/api/blogs')
-
-  const contents = response.body.map(blog => blog.title)
-
-  expect(response.body).toHaveLength(initialBlogs.length + 1)
+    .expect('Content-Type', /application\/json/) 
+  
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+	
+  const contents = blogsAtEnd.map(blog => blog.title)	
   expect(contents).toContain(
     'For the HTTP POST request test'
   )
@@ -84,11 +67,10 @@ test('missing likes property will default to the value 0', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/blogs')
-
-  const contents = response.body.map(blog => blog.title)
-
-  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+	
+  const contents = blogsAtEnd.map(blog => blog.title)	
   expect(contents).toContain(
     'Blog without the likes property'
   )
@@ -105,9 +87,29 @@ test('missing title or url properties will respond with the status code 400', as
     .send(newBlog)
     .expect(400)
 
-  const response = await api.get('/api/blogs')
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
 
-  expect(response.body).toHaveLength(initialBlogs.length)
+describe('deletion of a note', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+	
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+	const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(
+      helper.initialBlogs.length - 1
+    )
+
+    const contents = blogsAtEnd.map(blog => blog.title)
+
+    expect(contents).not.toContain(blogToDelete.title)
+  })
 })
 
 afterAll(async () => {
