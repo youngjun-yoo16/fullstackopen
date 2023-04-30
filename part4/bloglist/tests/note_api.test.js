@@ -91,7 +91,7 @@ test('missing title or url properties will respond with the status code 400', as
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
 
-describe('deletion of a note', () => {
+describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
@@ -109,6 +109,25 @@ describe('deletion of a note', () => {
     const contents = blogsAtEnd.map(blog => blog.title)
 
     expect(contents).not.toContain(blogToDelete.title)
+  })
+})
+
+describe('updating a blog', () => {
+  test('succeeds with status code 200 if id and content is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+	blogToUpdate.likes = 69
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+	
+	const blogsAtEnd = await helper.blogsInDb()
+	
+	const blogUpdated = blogsAtEnd[0]
+	expect(blogUpdated.likes).toBe(69)
   })
 })
 
