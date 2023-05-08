@@ -32,12 +32,11 @@ notesRouter.post('/', async (request, response, next) => {
   
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
   if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
+    return response.status(401).json({ 
+	  error: 'token invalid' })
   }
 	
   const user = await User.findById(decodedToken.id)
-  // Information about the user who created a note is sent in the userId field of the request body.
-  const user = await User.findById(body.userId)
   
   // Note scheme is updated so that the note is assigned to the user who created it.
   const note = new Note({
