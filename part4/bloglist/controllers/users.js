@@ -7,7 +7,7 @@ usersRouter.get('/', async (request, response) => {
   response.json(users)
 })
 
-usersRouter.post('/', async (request, response, next) => {
+usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
   
   if (!password || password.length < 3) {

@@ -161,7 +161,7 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map(user => user.username)
     expect(usernames).toContain(newUser.username)
   })
 	
@@ -185,7 +185,49 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
   })
-})
+	
+  test('creation fails with proper statuscode and message if username doesn\'t meet the length', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'rt',
+      name: 'Superuser',
+      password: 'salainen',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('shorter than the minimum allowed length (3)')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })	
+	
+  test('creation fails with proper statuscode and message if password doesn\'t exist or doesn\'t meet the length', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'hello',
+      name: 'Superuser',
+      password: 'as',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+	
+	expect(result.body.error).toContain('invalid password')
+	
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
+})	
 
 afterAll(async () => {
   await mongoose.connection.close()
