@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   username: {
 	type: String,
 	required: true,
+	minLength: 3,
 	unique: true
   },
   name: String,
@@ -19,6 +20,10 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(uniqueValidator)
 
+/* Only applies when 'toJSON' function is explicitly called. 
+If an object has a toJSON function, JSON.stringify() calls toJSON() and serializes the return value from toJSON() instead.
+Express' response.json() function convert objects to JSON using JSON.stringify(). 
+So custom toJSON() functions work with those modules as well. */
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
