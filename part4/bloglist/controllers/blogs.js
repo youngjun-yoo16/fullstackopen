@@ -49,10 +49,16 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     return response.status(401).json({ error: 'token invalid' })
   }
   
-  const blog = await Blog.findById(decodedToken.id)
+  // Finding a blog to be deleted.
+  const blog = await Blog.findById(request.params.id)
   
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+  // Deleting a blog is possible only if the token sent with the request is the same as that of the blog's creator.
+  if (blog.user.toString() === decodedToken.id.toString()) {
+    await Blog.findByIdAndRemove(request.params.id)
+	response.status(204).end()
+  } else {
+    return response.status(401).json({ error: 'invalid user' })  	  
+  }
 })
 
 blogsRouter.put('/:id', async (request, response, next) => {
