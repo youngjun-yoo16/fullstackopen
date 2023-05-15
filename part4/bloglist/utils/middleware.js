@@ -15,10 +15,13 @@ const unknownEndpoint = (request, response) => {
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
+    request.token = authorization.substring(7)
   }
-  return null
   next()
+}
+
+const userExtractor = (request, response, next) => {
+  const authorization = request.get('authorization')
 }
 
 const errorHandler = (error, request, response, next) => {
