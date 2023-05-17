@@ -50,7 +50,8 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   
   // Deleting a blog is possible only if the token sent with the request is the same as that of the blog's creator.
   if (blog.user.toString() === user._id.toString()) {
-    await Blog.deleteOne({ _id: request.params.id });
+    //await Blog.deleteOne({ _id: request.params.id })
+	await Blog.findByIdAndDelete(request.params.id)
 	response.status(204).end()
   } else {
     return response.status(401).json({ error: 'invalid user' })  	  
