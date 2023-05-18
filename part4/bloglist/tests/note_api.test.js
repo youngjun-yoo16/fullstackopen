@@ -53,7 +53,7 @@ describe('addition of a new blog', () => {
 		url: 'http://fullstackopen.com',
 		likes: 12
 	  }
-
+      
 	  await api
 		.post('/api/blogs')
 		.set("Authorization", `Bearer ${token}`)	
@@ -119,10 +119,10 @@ describe('deletion of a blog', () => {
 		
       const passwordHash = await bcrypt.hash("abcde", 10);
       const user = await new User({ username: "name", passwordHash }).save();
-		
+	
 	  const userForToken = { username: user.username, id: user._id };	
-	  const token = jwt.sign(userForToken, process.env.SECRET)	
-	  
+	  token = jwt.sign(userForToken, process.env.SECRET)	
+	 
 	  const newBlog = {
 		title: 'For the HTTP POST request test',
 		author: 'John Doe',
@@ -143,16 +143,15 @@ describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
-	console.log(blogToDelete)
+	
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
 	  .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
 	const blogsAtEnd = await helper.blogsInDb()
-
     expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1
+      blogsAtStart.length - 1
     )
 
     const contents = blogsAtEnd.map(blog => blog.title)
