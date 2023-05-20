@@ -108,6 +108,22 @@ describe('addition of a new blog', () => {
 	  const blogsAtEnd = await helper.blogsInDb()
 	  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 	})
+	
+	test('fails with the status code 401 if a token is not provided', async () => {
+	  const newBlog = {
+		title: 'Andrew Tate the Top G',
+		author: 'Tristan Tate',
+		url: 'http://andrewtateismabro.com'
+	  }
+
+	  await api
+		.post('/api/blogs')
+		.send(newBlog)
+		.expect(401)
+
+	  const blogsAtEnd = await helper.blogsInDb()
+	  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+	})
 })
 
 describe('deletion of a blog', () => {
