@@ -13,9 +13,10 @@ blogsRouter.post('/', async (request, response) => {
   const user = request.user
   const body = request.body
   const token = request.token
-
+  console.log(token)
   const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!token || !decodedToken.id) {
+  console.log(decodedToken)
+  if (!(token || decodedToken.id)) {
 	console.log('poop')
     return response.status(401).json({ error: 'token missing or invalid' })
   }
@@ -52,7 +53,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   // Deleting a blog is possible only if the token sent with the request is the same as that of the blog's creator.
   if (blog.user.toString() === user._id.toString()) {
     //await Blog.deleteOne({ _id: request.params.id })
-	await Blog.findByIdAndDelete(request.params.id)
+	await blog.deleteOne()
 	response.status(204).end()
   } else {
     return response.status(401).json({ error: 'invalid user' })  	  

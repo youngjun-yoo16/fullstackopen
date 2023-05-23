@@ -110,7 +110,7 @@ describe('addition of a new blog', () => {
 	})
 	
 	test('fails with the status code 401 if a token is not provided', async () => {
-	  //token = null
+	  token = null
 	  const newBlog = {
 		title: 'Andrew Tate the Top G',
 		author: 'Tristan Tate',
@@ -119,7 +119,7 @@ describe('addition of a new blog', () => {
 	  console.log(token)
 	  await api
 		.post('/api/blogs')
-		.set("Authorization",`Bearer ${token}`)
+		.set("Authorization", `Bearer ${token}`)
 		.send(newBlog)
 		.expect(401)
 
