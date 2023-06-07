@@ -67,6 +67,15 @@ const App = () => {
 		setNotes(initialNotes)
 	  })
   }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
   
   const toggleImportnaceOf = id => {
 	// Finding the note we want to modify, and we then assign it to the note variable.
