@@ -49,8 +49,3 @@ updates:
     directory: "/part6"
     schedule:
       interval: "daily"
-
-  - package-ecosystem: "npm"
-    directory: "/part9"
-    schedule:
-      interval: "daily"
