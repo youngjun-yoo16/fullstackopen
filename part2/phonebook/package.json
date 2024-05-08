@@ -39,5 +39,8 @@
       "last 1 safari version"
     ]
   },
+  "overrides": {
+    "postcss": "8.4.38"
+  },
   "proxy": "https://backend-server.run.goorm.site"
 }
