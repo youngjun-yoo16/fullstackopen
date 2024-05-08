@@ -1,0 +1,56 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/course/backend"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/course/example"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part1/anecdotes" 
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm" 
+    directory: "/part1/courseinfo" 
+    schedule:
+      interval: "daily"  
+
+  - package-ecosystem: "npm" 
+    directory: "/part1/unicafe" 
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part2/countries"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part2/phonebook"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part3/phonebook"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part4/bloglist"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part6"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part9"
+    schedule:
+      interval: "daily"
