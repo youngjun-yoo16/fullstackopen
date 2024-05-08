@@ -40,5 +40,8 @@
   "devDependencies": {
     "json-server": "^0.17.4"
   },
+  "overrides": {
+    "postcss": "8.4.38"
+  },
   "proxy": "https://backend-server.run.goorm.site"
 }
