@@ -1,6 +1,6 @@
 # Full Stack Open
 
-My submission for the [Full Stack Open](https://fullstackopen.com/) by the [University of Helsinki's Department of Computer Science](https://www.mooc.fi/en).
+My submission for the [Full Stack Open](https://fullstackopen.com/en/) by the [University of Helsinki's Department of Computer Science](https://www.mooc.fi/en).
 
 ## General
 
