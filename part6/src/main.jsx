@@ -13,6 +13,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App />
   </Provider>
 );
-
-//renderApp();
-//store.subscribe(renderApp);
