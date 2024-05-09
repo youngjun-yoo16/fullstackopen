@@ -1,33 +1,10 @@
-//import React from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { createStore } from "redux";
-
-const noteReducer = (state = [], action) => {
-  if (action.type === "NEW_NOTE") {
-    return state.concat(action.payload);
-  }
-
-  return state;
-};
+import noteReducer from "./reducers/noteReducer";
 
 const store = createStore(noteReducer);
-
-store.dispatch({
-  type: "NEW_NOTE",
-  payload: {
-    content: "the app state is in redux store",
-    important: true,
-    id: 1,
-  },
-});
-
-store.dispatch({
-  type: "TOGGLE_IMPORTANCE",
-  payload: {
-    id: 2,
-  },
-});
 
 const App = () => {
   return (
