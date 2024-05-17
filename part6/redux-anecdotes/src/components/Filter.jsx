@@ -6,10 +6,10 @@ const Filter = () => {
 
   const handleChange = (event) => {
     // input-field value is in variable event.target.value
-	event.preventDefault();
+    event.preventDefault();
     const filter = event.target.value;
     dispatch(filterChange(filter));
-	//event.target.value = "";
+    //event.target.value = "";
   };
   const style = {
     marginBottom: 10,
