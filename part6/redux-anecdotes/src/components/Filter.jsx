@@ -9,7 +9,6 @@ const Filter = () => {
     event.preventDefault();
     const filter = event.target.value;
     dispatch(filterChange(filter));
-    //event.target.value = "";
   };
   const style = {
     marginBottom: 10,
