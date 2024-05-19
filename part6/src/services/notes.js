@@ -10,7 +10,7 @@ const getAll = async () => {
 const createNew = async (content) => {
   const object = { content, important: false };
   const response = await axios.post(baseUrl, object);
-  return response.data;
+  return response.data; // The response includes the newly generated ID
 };
 
 export default { getAll, createNew };

@@ -7,7 +7,7 @@ const noteSlice = createSlice({
   initialState: [],
   reducers: {
     createNote(state, action) {
-      state.push(action.payload);
+      state.push(action.payload); // Pushes the new note with ID into the state
     },
     toggleImportanceOf(state, action) {
       const id = action.payload;
