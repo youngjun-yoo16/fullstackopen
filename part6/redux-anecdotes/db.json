@@ -34,6 +34,11 @@
       "id": "3648",
       "content": "New anecdote test",
       "votes": 0
+    },
+    {
+      "id": "646a",
+      "content": "Another anecdote test",
+      "votes": 0
     }
   ]
 }
