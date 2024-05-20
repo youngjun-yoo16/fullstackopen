@@ -34,7 +34,7 @@ const Notification = () => {
   return (
     <div style={style}>
       {notification.type === "create"
-        ? "You created '" + notification.content + "'"
+        ? "You created '" + notification.content.content + "'"
         : "You voted '" + notification.content + "'"}
     </div>
   );
