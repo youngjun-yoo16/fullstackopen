@@ -27,4 +27,5 @@ export const {
   setNotificationByUpvote,
   removeNotification,
 } = notificationSlice.actions;
+
 export default notificationSlice.reducer;
