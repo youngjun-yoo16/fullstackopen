@@ -40,7 +40,7 @@ jobs:
         working-directory: ${{ matrix.directory }}
 
       - name: Auto-merge Dependabot PRs
-        if: github.actor == 'dependabot[bot]' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
         uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
