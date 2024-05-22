@@ -49,3 +49,13 @@ updates:
     directory: "/part6"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part6/redux-anecdotes"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/part6/unicafe-redux"
+    schedule:
+      interval: "daily"

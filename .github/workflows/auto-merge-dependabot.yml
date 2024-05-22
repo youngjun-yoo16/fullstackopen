@@ -5,22 +5,39 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
-  workflow_dispatch: # Allows manual triggering of the workflow
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory:
+          - course/backend
+          - course/example
+          - part1/anecdotes
+          - part1/courseinfo
+          - part1/unicafe
+          - part2/countries
+          - part2/phonebook
+          - part3/phonebook
+          - part4/bloglist
+          - part6
+          - part6/redux-anecdotes
+          - part6/unicafe-redux
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4  
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
+        working-directory: ${{ matrix.directory }}
 
       - name: Auto-merge Dependabot PRs
         if: github.actor == 'dependabot[bot]' || github.event_name == 'workflow_dispatch'
