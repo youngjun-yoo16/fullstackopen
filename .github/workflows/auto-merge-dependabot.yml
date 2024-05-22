@@ -5,12 +5,11 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -24,6 +23,7 @@ jobs:
         run: npm install
 
       - name: Auto-merge Dependabot PRs
+        if: github.actor == 'dependabot[bot]' || github.event_name == 'workflow_dispatch'
         uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
