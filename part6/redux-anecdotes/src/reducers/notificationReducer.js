@@ -4,17 +4,8 @@ const notificationSlice = createSlice({
   name: "notification",
   initialState: "",
   reducers: {
-    setNotificationByCreate(state, action) {
-      return {
-        content: action.payload,
-        type: "create",
-      };
-    },
-    setNotificationByUpvote(state, action) {
-      return {
-        content: action.payload,
-        type: "upvote",
-      };
+    showNotification(state, action) {
+      return action.payload;
     },
     removeNotification() {
       return "";
@@ -22,10 +13,21 @@ const notificationSlice = createSlice({
   },
 });
 
-export const {
-  setNotificationByCreate,
-  setNotificationByUpvote,
-  removeNotification,
-} = notificationSlice.actions;
+export const { showNotification, removeNotification } =
+  notificationSlice.actions;
+
+export const setNotification = (text, timeout) => {
+  return async (dispatch) => {
+    dispatch(showNotification(text));
+    const timer = setTimeout(() => {
+      dispatch(removeNotification());
+    }, timeout * 1000);
+
+    // Cleans up the timer if the component unmounts or if the notification changes before the timer finishes
+    return () => {
+      clearTimeout(timer);
+    };
+  };
+};
 
 export default notificationSlice.reducer;
