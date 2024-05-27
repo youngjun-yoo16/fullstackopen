@@ -18,7 +18,20 @@ const AnecdoteForm = () => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
-    newAnecdoteMutation.mutate({ content, votes: 0 });
+    newAnecdoteMutation.mutate(
+      { content, votes: 0 },
+      {
+        onError: (error) => {
+          notificationDispatch({
+            type: "SET_NOTIFICATION",
+            data: { notification: error.response.data.error },
+          });
+          setTimeout(() => {
+            notificationDispatch({ type: "REMOVE_NOTIFICATION" });
+          }, 5000);
+        },
+      }
+    );
     notificationDispatch({
       type: "SET_NOTIFICATION",
       data: { notification: `anecdote '${content}' created` },
