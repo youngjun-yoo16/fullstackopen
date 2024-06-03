@@ -2,7 +2,6 @@
   "name": "part9",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "ts-node": "ts-node",
     "multiply": "ts-node multiplier.ts",
