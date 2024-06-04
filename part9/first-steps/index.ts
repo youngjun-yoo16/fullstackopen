@@ -12,6 +12,7 @@ app.get("/hello", (_req, res) => {
 });
 
 app.get("/bmi", (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { height, weight } = req.query;
 
   if (!height || !weight) {
