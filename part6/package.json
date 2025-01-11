@@ -20,7 +20,7 @@
     "redux": "^5.0.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^19.0.0",
