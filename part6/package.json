@@ -24,7 +24,7 @@
     "@babel/preset-react": "^7.25.9",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.1",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "deep-freeze": "^0.0.1",
     "eslint": "^9.18.0",
     "eslint-plugin-jest": "^28.11.0",
