@@ -23,7 +23,7 @@
     "redux": "^5.0.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.18.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
