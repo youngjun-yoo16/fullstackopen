@@ -14,7 +14,7 @@
   "dependencies": {
     "axios": "^1.14.0",
     "@reduxjs/toolkit": "^2.11.2",
-    "react": "^19.0.0",
+    "react": "^19.2.5",
     "react-dom": "^19.2.4",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1"
@@ -22,7 +22,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
-    "@types/react": "^19.0.12",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "deep-freeze": "^0.0.1",
